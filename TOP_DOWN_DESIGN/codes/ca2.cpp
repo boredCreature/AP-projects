@@ -209,11 +209,12 @@ void runParkManagement(const string& CarFile, const string& SpotFile, const stri
     map<int, bool> SpotStatus;
     map<int, int> SpotDays;
     
-    fillStatusMap(SpotStatus, spots);
     //reading Files
     readCarFile(CarFile, cars);
     readSpotFile(SpotFile, spots);
     readPricesFile(PriceFile, prices);
+
+    fillStatusMap(SpotStatus, spots);
     //calling a function to run commands
     getCommands(cars, spots, prices, SpotStatus, SpotDays);
 }
