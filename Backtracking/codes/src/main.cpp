@@ -2,9 +2,17 @@
 
 int main() {
     vector <string> inputBoard;
-    vector <pair<int, int>> obsticlepositions;
+    set<pair<int, int>> obstaclePositions;
     inputBoard = getInput();
-    findObstciles(inputBoard, obsticlepositions);
+    findObstciles(inputBoard, obstaclePositions);
+    int queenColInRow[SIZE];
+    fillBoardWithNegOne(queenColInRow);
+
+    int solutionNumber = 0;
+    solveEightQueen(0, solutionNumber, queenColInRow ,obstaclePositions);
+    cout << solutionNumber << endl;
+
+
     return 0;
 
 }
