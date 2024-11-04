@@ -9,19 +9,17 @@ void getInput (int& n, vector<int>& numberInFaculty) {
         cin >> number;
         numberInFaculty.push_back(number);
     }
-
 }
-
-
 // a recursive functoin to find minimum shirini
 
 int findMinShirini (int current, int n, const vector<int>& numberInFaculty) {
     if (current == n - 1) 
         return 0;
+
     int minShirini = __INT_MAX__;
     
-    for (int size = 1; size <= 2; ++size) {
-        int next = current + size;
+    for (int step = 1; step <= 2; ++step) {
+        int next = current + step;
         if (next < n) {
             int cost = abs(numberInFaculty[next] - numberInFaculty[current]);
             minShirini = min(minShirini, cost + findMinShirini(next, n, numberInFaculty));
