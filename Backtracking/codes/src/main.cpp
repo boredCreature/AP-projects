@@ -1,18 +1,11 @@
-#include "Q1.hpp"
+#include "Q3.hpp"
+
 
 int main() {
-    vector <string> inputBoard;
-    set<pair<int, int>> obstaclePositions;
-    inputBoard = getInput();
-    findObstciles(inputBoard, obstaclePositions);
-    int queenColInRow[SIZE];
-    fillBoardWithNegOne(queenColInRow);
-
-    int solutionNumber = 0;
-    solveEightQueen(0, solutionNumber, queenColInRow ,obstaclePositions);
-    cout << solutionNumber << endl;
-
-
+    int n;
+    vector <int> numberInFaculty;
+    getInput(n, numberInFaculty);
+    int minShirini = minShiriniFinder(numberInFaculty);
+    cout << minShirini << endl;
     return 0;
-
 }
