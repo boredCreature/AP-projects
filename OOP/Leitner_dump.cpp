@@ -74,19 +74,23 @@ string Leinter::to_string() {
     return os.str();
 }
 
+void handle_add_flashcard(Leinter& leinter) {
+    string flashcard_number, question, answer;
+    cin >> flashcard_number;
+    cin.ignore();
+    for (int i = 0; i < stoi(flashcard_number); i++) {
+        getline(cin, question);
+        getline(cin, answer);
+        leinter.add_flashcards(question, answer);
+    }
+}
 
-void handle_commands(Leinter leinter) {
+void handle_commands(Leinter& leinter) {
     string command;
-    while (cin >> command) {
+    while(cin >> command) {
         if (command == "add_flashcard") {
-            string flashcard_number,question, answer;
-            cin >> flashcard_number;
-            cin.ignore();
-            for (int i = 0; i < stoi(flashcard_number); i++) {
-                getline(cin, question);
-                getline(cin, answer);
-                leinter.add_flashcards(question, answer);
-            }
+            handle_add_flashcard(leinter);
+            cout << "flashcards added to the daily box" << endl;
         }
         else if (command == "dump") {
             cout << leinter.to_string();
