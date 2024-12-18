@@ -5,6 +5,8 @@
 #include "Flashcard.hpp"
 using namespace std;
 
+string Flashcard::get_quesetion() {return question; }
+string Flashcard::get_answer() {return answer; }
 
 string Flashcard::to_string() {
     stringstream os;

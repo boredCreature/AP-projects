@@ -1,19 +1,12 @@
 #ifndef LEINTER_HPP
 #define LEINTER_HPP
-#include <map>
 #include "Box.hpp"
 
-enum Time_Periods{
-    day,
-    three_days,
-    week,
-    month
-};
 
-const int time_length_of[] = {1, 3, 7, 30};
+const int time_length_of_box[] = {1, 3, 7, 30};
 const int num_of_boxes = 4;
 
-enum Box_Time_Id {
+enum Box_Id{
     daily,
     every_three_days,
     weekly,
@@ -21,13 +14,13 @@ enum Box_Time_Id {
 };
 
 
-// a class for my top-level object
 class Leinter{
 public:
     Leinter();
     void add_flashcards(Flashcard* flashcard);
     void add_one_day();
-    //vector<Flashcard*> find_flashcards_for_review(int flashcards_number);
+    std::vector<Flashcard*> find_flashcards_for_review(int flashcards_number);
+    bool check_user_answer(std::string flashcard_answer, std::string user_answer);
     std::string to_string();
 private:
     Box box[num_of_boxes];

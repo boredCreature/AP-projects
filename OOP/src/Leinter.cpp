@@ -14,19 +14,23 @@ void Leinter::add_one_day() {
     day += 1;
 }
 
+vector<Flashcard*> Leinter::find_flashcards_for_review(int flashcards_number) {
+    vector<Flashcard*> flashcards_for_review;
+    int remaining_flashcards = flashcards_number;
+    for (int i = remaining_flashcards; i > 0; i --) {
+        for (int box_id = monthly; box_id >= daily; box_id --) {
+            if (day % time_length_of_box[box_id] == 0) {
+                remaining_flashcards = box[box_id].find_flashcards_for_review(remaining_flashcards, flashcards_for_review);
+            }
+        }
+    }
+    return flashcards_for_review;
+}
 
-// vector<Flashcard*> Leinter::find_flashcards_for_review(int flashcards_number) {
-//     vector<Flashcard*> flashcards_for_review;
-//     int remaining_flashcards = flashcards_number;
-//     for (int i = flashcards_number; i > 0; i --) {
-//         if (day % Month_length == 0 && !boxes.monthly_box.check_empty())
-//             remaining_flashcards = boxes.monthly_box.find_flashcards_for_review(remaining_flashcards, flashcards_for_review);
-//         if (day % Week_length == 0 && !boxes.weekly_box.check_empty()) {
-//             remaining_flashcards = boxes.monthly_box.find_flashcards_for_review(remaining_flashcards, flashcards_for_review);
-//         }
+bool Leinter::check_user_answer(string flashcard_answer, string user_answer) {
+    return (flashcard_answer == user_answer);
+}
 
-//     }   
-// }
 
 string Leinter::to_string() {
     stringstream os;
