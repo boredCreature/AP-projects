@@ -14,10 +14,13 @@ struct Boxes {
 // a class for my top-level object
 class Leinter{
 public:
+    Leinter();
     void add_flashcards(Flashcard* flashcard);
+    void add_one_day();
     std::string to_string();
 private:
     Boxes boxes;
+    int day;
 };
 
 #endif
