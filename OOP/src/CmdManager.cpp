@@ -1,30 +1,35 @@
 #include <iostream>
 #include <sstream>
 
-
 #include "CmdManager.hpp"
 using namespace std;
+
 
 CmdManager::CmdManager() {
     leinter = new Leinter();
 }
 
 void CmdManager::run() {
-    std::string command;
-    while (std::cin >> command) { 
+    string command;
+    while (cin >> command) { 
         if (command == "add_flashcard") {
-            std::string question_number;
+            string question_number;
             cin >> question_number;
             handle_add_flashcards(question_number);
         }
         if (command == "next_day") {
             handle_time();
         }
+        if (command == "review_today") {
+            string flashcards_number;
+            cin >> flashcards_number;
+            handle_review_flashcards(flashcards_number);
+        }
     }
 }
 
-void CmdManager::handle_add_flashcards(std::string question_number) {
-    int flashcard_numbers = std::stoi(question_number);
+void CmdManager::handle_add_flashcards(string question_number) {
+    int flashcard_numbers = stoi(question_number);
     cin.ignore();
     for (int i = 0; i < flashcard_numbers; i++ ) {
         string question, answer;
@@ -37,6 +42,11 @@ void CmdManager::handle_add_flashcards(std::string question_number) {
 
 void CmdManager::handle_time() {
     leinter->add_one_day();
+}
+
+void CmdManager::handle_review_flashcards(string flashcards_number) {
+    int flashcards_number_ = stoi(flashcards_number);
+    vector<Flashcard*> flashcards_for_review = leinter->find_flashcards_for_review(flashcards_number_);
 }
 
 string CmdManager::to_string() {
