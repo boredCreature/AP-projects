@@ -20,11 +20,11 @@ void CmdManager::run() {
         if (command == "next_day") {
             handle_time();
         }
-        if (command == "review_today") {
-            string flashcards_number;
-            cin >> flashcards_number;
-            handle_review_flashcards(flashcards_number);
-        }
+        // if (command == "review_today") {
+        //     string flashcards_number;
+        //     cin >> flashcards_number;
+        //     handle_review_flashcards(flashcards_number);
+        // }
     }
 }
 
@@ -44,10 +44,10 @@ void CmdManager::handle_time() {
     leinter->add_one_day();
 }
 
-void CmdManager::handle_review_flashcards(string flashcards_number) {
-    int flashcards_number_ = stoi(flashcards_number);
-    vector<Flashcard*> flashcards_for_review = leinter->find_flashcards_for_review(flashcards_number_);
-}
+// void CmdManager::handle_review_flashcards(string flashcards_number) {
+//     int flashcards_number_ = stoi(flashcards_number);
+//     vector<Flashcard*> flashcards_for_review = leinter->find_flashcards_for_review(flashcards_number_);
+// }
 
 string CmdManager::to_string() {
     stringstream os;

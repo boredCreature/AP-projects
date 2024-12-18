@@ -3,20 +3,22 @@
 #include <map>
 #include "Box.hpp"
 
-enum box_time_periods{
-    day_length = 1,
-    every_three_days_length = 3,
-    week_legnth = 7,
-    month_length = 30
+enum Time_Periods{
+    day,
+    three_days,
+    week,
+    month
 };
 
-struct boxes {
-    Box daily_box;
-    Box three_days_box;
-    Box weekly_box;
-    Box monthly_box;
-};
+const int time_length_of[] = {1, 3, 7, 30};
+const int num_of_boxes = 4;
 
+enum Box_Time_Id {
+    daily,
+    every_three_days,
+    weekly,
+    monthly
+};
 
 
 // a class for my top-level object
@@ -25,16 +27,13 @@ public:
     Leinter();
     void add_flashcards(Flashcard* flashcard);
     void add_one_day();
-    vector<Flashcard*> find_flashcards_for_review(int flashcards_number);
+    //vector<Flashcard*> find_flashcards_for_review(int flashcards_number);
     std::string to_string();
 private:
-    // boxes boxes;
+    Box box[num_of_boxes];
     int day;
 };
 
 
 
 #endif
-
-
-
