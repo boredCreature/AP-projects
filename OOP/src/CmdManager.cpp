@@ -9,7 +9,7 @@ CmdManager::CmdManager() {
     leinter = new Leinter();
 }
 
-void CmdManager::run() {
+void CmdManager::handle_inputs() {
     string command;
     while (cin >> command) { 
         if (command == "add_flashcard") {

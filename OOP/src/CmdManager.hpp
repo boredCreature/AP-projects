@@ -7,7 +7,7 @@
 class CmdManager {
 public:
     CmdManager();
-    void run();
+    void handle_inputs();
     void handle_add_flashcards(std::string question_number);
     void handle_time();
     void handle_review_flashcards(std::string flashcards_number);
