@@ -10,7 +10,7 @@ public:
     void handle_inputs();
     void handle_add_flashcards(std::string question_number);
     void handle_time();
-    void handle_review_flashcards(std::string num_of_flashca);
+    void handle_review_flashcards(std::string flashcards_number);
     std::string to_string();
 private:
     Leinter* leinter;

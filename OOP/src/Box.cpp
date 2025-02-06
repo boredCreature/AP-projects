@@ -22,21 +22,6 @@ int Box::find_flashcards_for_review(int remaining_flashcards, vector<Flashcard* 
     return remaining_flashcards;
 }
 
-bool Box::includes_flashcard(Flashcard* flashcard) {
-    for (auto current_flashcard : flashcards) {
-        if (current_flashcard == flashcard) 
-            return true;
-    }
-    return false;
-}
-
-void Box::remove_flashcard(Flashcard* flashcard) {
-    auto it = find(flashcards.begin(), flashcards.end(), flashcard);
-    flashcards.erase(it);
-}
-
-int Box::get_num_of_flashcards() {return flashcards.size(); }
-
 string Box::to_string() {
     stringstream os;
     for (auto flashcard : flashcards) {

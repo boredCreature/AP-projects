@@ -7,7 +7,6 @@ class App {
 public:
     App();
     void run();
-    std::string to_string();
 private:
     CmdManager* cmd_manager;
 };
