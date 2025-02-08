@@ -38,6 +38,7 @@ void CmdManager::handle_add_flashcards(string question_number) {
         Flashcard* new_flashcard = new Flashcard(question, answer);
         leinter->add_flashcards(new_flashcard);
     }
+    cout << "Flashcards added to the daily box" << endl;
 }
 
 void CmdManager::handle_time() {
@@ -54,8 +55,9 @@ void CmdManager::handle_review_flashcards(string flashcards_number) {
         cout << "Your Answer: ";
         cin.ignore();
         getline(cin, user_answer);
-        
-        if (leinter->check_user_answer(flashcard->get_answer(), user_answer))
+        bool correctness = flashcard->is_answer_correct(user_answer);
+        leinter->handle_flashcard_move(flashcard, correctness);
+        if (correctness)
             cout << "Your answer was correct! Well done, keep it up!" << endl;
         else
             cout << "Your answer was incorrect. Don't worry! The correct answer is: " << flashcard->get_answer() << endl;

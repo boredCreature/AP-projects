@@ -4,14 +4,19 @@
 
 using namespace std;
 
-Leinter::Leinter() : day(1) {}
+Leinter::Leinter() : day(1) {
+    for (int box_id = 0; box_id < NUM_OF_BOXES; box_id++) {
+        box[box_id] = new Box();
+    }
+}
 
 void Leinter::add_flashcards(Flashcard* flashcard) {
-    box[daily].add_flashcard(flashcard);
+    box[daily]->add_flashcard(flashcard);
 }
 
 void Leinter::add_one_day() {
     day += 1;
+    handle_unreviewed_flashcards_move();
 }
 
 vector<Flashcard*> Leinter::find_flashcards_for_review(int flashcards_number) {
@@ -19,25 +24,81 @@ vector<Flashcard*> Leinter::find_flashcards_for_review(int flashcards_number) {
     int remaining_flashcards = flashcards_number;
     for (int i = remaining_flashcards; i > 0; i --) {
         for (int box_id = monthly; box_id >= daily; box_id --) {
-            if (day % time_length_of_box[box_id] == 0) {
-                remaining_flashcards = box[box_id].find_flashcards_for_review(remaining_flashcards, flashcards_for_review);
+            if (day % TIME_LENGTH_OF_BOX[box_id] == 0) {
+                cout << box_id << endl;
+                remaining_flashcards = box[box_id]->find_flashcards_for_review(remaining_flashcards, flashcards_for_review);
             }
         }
     }
+    add_flashcards_to_all_reviewed_flashcards_in_day(flashcards_for_review);
     return flashcards_for_review;
 }
 
-bool Leinter::check_user_answer(string flashcard_answer, string user_answer) {
-    return (flashcard_answer == user_answer);
+int Leinter::find_box_id(Flashcard* flashcard) {
+    for (int box_id = 0; box_id < NUM_OF_BOXES; box_id ++) {
+        if (box[box_id]->does_include_flashcard(flashcard)) {
+            return box_id;
+        }
+    }
+    return -1; //just not to get compiler warning
 }
 
 
+void Leinter::handle_flashcard_move(Flashcard* flashcard, bool answer_correction) {
+    int box_id = find_box_id(flashcard);
+
+    //END FLASHCARD LIFECYCLE   
+    if (answer_correction && box_id == Box_Id::monthly)
+        box[box_id]->delete_flashcard(flashcard);
+    
+    else if (!answer_correction && box_id == Box_Id::daily)
+        return;
+
+    else if ((!answer_correction && flashcard->should_move_to_next_box_because_of_wrong_answer()) || answer_correction)
+    {   move_direction direction = answer_correction ? move_direction::upper : move_direction::lower;
+        move_flashcard(flashcard, direction);
+        //Reset flashcard number of wrong answers
+        flashcard->reset_num_of_wrong_answers();}
+
+}
+
+void Leinter::move_flashcard(Flashcard* flashcard, int move_direction) {
+    int box_id = find_box_id(flashcard);
+    box[box_id]->delete_flashcard(flashcard);
+
+    if (move_direction == move_direction::upper)
+        box[box_id + 1]->add_flashcard(flashcard);
+
+    else if (move_direction == move_direction::lower) 
+        box[box_id - 1]->add_flashcard(flashcard);
+}
+
+void Leinter::add_flashcards_to_all_reviewed_flashcards_in_day(vector<Flashcard*> reviewed_flashcards) {
+    all_reviewed_flashcards_in_day.insert(all_reviewed_flashcards_in_day.end(), reviewed_flashcards.begin(), reviewed_flashcards.end());
+}
+
+void Leinter::find_unreviewed_flashcards_in_day() {
+    vector<Flashcard*> unreviewed_flashcards_in_day;
+    for (int box_id = 0; box_id < NUM_OF_BOXES; box_id ++) {
+        if (day % TIME_LENGTH_OF_BOX[box_id] == 0) {
+            vector<Flashcard*> unreviewed_flashcards = box[box_id]->handle_unreviewed_flashcards(unreviewed_flashcards_in_day);
+            unreviewed_flashcards_in_day.insert(unreviewed_flashcards_in_day.end(), unreviewed_flashcards.begin(), unreviewed_flashcards.end());
+        }
+    }
+}
+
+void Leinter::handle_unreviewed_flashcards_move() {
+    for (auto flashcard : unreviewed_flashcards_in_day) {
+        handle_flashcard_move(flashcard, move_direction::lower);
+    }
+}
+
 string Leinter::to_string() {
     stringstream os;
-    os << box[daily].to_string();
-    os << box[every_three_days].to_string();
-    os << box[weekly].to_string();
-    os << box[monthly].to_string();
+    os << "Box daily: " << box[daily]->to_string() << endl;
+    os << "Box every three days: " << box[every_three_days]->to_string() << endl;
+    os << "Box weekly: " << box[weekly]->to_string() << endl;
+    os << "Box monthly: " << box[monthly]->to_string() << endl;
     os << "today is day: " << day << endl; 
     return os.str();
 }
