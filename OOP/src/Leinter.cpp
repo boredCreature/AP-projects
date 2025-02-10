@@ -25,7 +25,6 @@ vector<Flashcard*> Leinter::find_flashcards_for_review(int flashcards_number) {
     for (int i = remaining_flashcards; i > 0; i --) {
         for (int box_id = monthly; box_id >= daily; box_id --) {
             if (day % TIME_LENGTH_OF_BOX[box_id] == 0) {
-                cout << box_id << endl;
                 remaining_flashcards = box[box_id]->find_flashcards_for_review(remaining_flashcards, flashcards_for_review);
             }
         }
@@ -92,6 +91,20 @@ void Leinter::handle_unreviewed_flashcards_move() {
         handle_flashcard_move(flashcard, move_direction::lower);
     }
 }
+
+void Leinter::add_to_num_of_correct_answers() {
+    performance_records[day].num_of_correct_answers += 1;
+}
+
+void Leinter::add_to_num_of_wrong_answers() {
+    performance_records[day].num_of_wrong_answers += 1;
+}
+
+void Leinter::make_performance_record() {
+    performance_records[day].num_of_correct_answers = 0;
+    performance_records[day].num_of_wrong_answers = 0;
+}
+
 
 string Leinter::to_string() {
     stringstream os;

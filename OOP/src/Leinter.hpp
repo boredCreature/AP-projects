@@ -19,6 +19,12 @@ enum move_direction {
 };
 
 
+struct performance{
+    int num_of_correct_answers;
+    int num_of_wrong_answers;
+};
+
+
 class Leinter{
 public:
     Leinter();
@@ -27,6 +33,10 @@ public:
     std::vector<Flashcard*> find_flashcards_for_review(int flashcards_number);
     int find_box_id(Flashcard* flashcard);
     void handle_flashcard_move(Flashcard* flashcard, bool answer_correctness);
+    std::map<int, performance> get_performance_records() {return performance_records; }
+    void add_to_num_of_correct_answers();
+    void add_to_num_of_wrong_answers();
+    void make_performance_record();
     std::string to_string();
 private:
     void move_flashcard(Flashcard* flashcard, int move_direction);
@@ -37,10 +47,8 @@ private:
     void handle_unreviewed_flashcards_move();
     Box* box[NUM_OF_BOXES];
     int day;
+    std::map<int, performance> performance_records;
 };
 
-
-
 #endif
-
 
