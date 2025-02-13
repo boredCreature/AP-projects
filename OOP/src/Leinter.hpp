@@ -29,6 +29,13 @@ struct performance{
     }    
 };
 
+struct Progress {
+    int day;
+    int streak;
+    int num_of_reviewed_days;
+    int num_of_finished_life_cycle_flashcards;
+};
+
 
 class Leinter{
 public:
@@ -43,7 +50,10 @@ public:
     void add_to_num_of_wrong_answers();
     void make_performance_record();
     void update_streak();
-    int get_streak() {return streak; }
+    int get_streak() {return progress.streak; }
+    void add_to_num_of_finished_cycle_flashcards();
+    Progress get_progress () {return progress; }
+    void add_to_num_of_reviewed_days();
     std::string to_string();
 private:
     void move_flashcard(Flashcard* flashcard, int move_direction);
@@ -53,9 +63,10 @@ private:
     void find_unreviewed_flashcards_in_day();
     void handle_unreviewed_flashcards_move();
     Box* box[NUM_OF_BOXES];
-    int day;
     std::map<int, performance> performance_records;
-    int streak;
+    Progress progress;
+
 };
 
 #endif
+

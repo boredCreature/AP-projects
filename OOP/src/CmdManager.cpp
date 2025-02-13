@@ -12,6 +12,7 @@ CmdManager::CmdManager() {
 void CmdManager::handle_inputs() {
     string command;
     while (cin >> command) { 
+
         if (command == "add_flashcard") {
             string question_number;
             cin >> question_number;
@@ -31,6 +32,9 @@ void CmdManager::handle_inputs() {
             string begin_day, end_day;
             cin >> begin_day >> end_day;
             handle_get_report(stoi(begin_day), stoi(end_day));
+        }
+        else if (command == "get_progress_report") {
+            handle_get_progress_report();
         }
         else if (command == "streak") {
             handle_streak();
@@ -54,10 +58,16 @@ void CmdManager::handle_next_day() {
     leinter->update_streak();
     leinter->add_one_day();
     leinter->make_performance_record();
+
+    cout << "Good morning! Today is day " << leinter->get_progress().day << " of our journey." << endl;
+    cout << "Your current streak is: " << leinter->get_progress().streak << endl;
+    cout << "Start reviewing to keep your streak!" << endl;
 }
 
 void CmdManager::handle_review_flashcards(string flashcards_number) {
     int flashcards_number_ = stoi(flashcards_number);
+    //just for testing
+    leinter->add_to_num_of_reviewed_days();
     vector<Flashcard*> flashcards_for_review = leinter->find_flashcards_for_review(flashcards_number_);
     
     for (auto flashcard : flashcards_for_review) {
@@ -67,10 +77,12 @@ void CmdManager::handle_review_flashcards(string flashcards_number) {
         getline(cin, user_answer);
         bool correctness = flashcard->is_answer_correct(user_answer);
         leinter->handle_flashcard_move(flashcard, correctness);
+
         if (correctness) {
             leinter->add_to_num_of_correct_answers();
             cout << "Your answer was correct! Well done, keep it up!" << endl;
         }
+
         else {
             leinter->add_to_num_of_wrong_answers();
             cout << "Your answer was incorrect. Don't worry! The correct answer is: " << flashcard->get_answer() << endl;
@@ -103,6 +115,23 @@ void CmdManager::handle_get_report(int begin_day, int end_day) {
     cout << "Total: " << total_answers << endl;
     
 }
+
+
+void CmdManager::add_to_num_of_finished_life_cycle_flashcards() {
+    leinter->add_to_num_of_finished_cycle_flashcards();
+}
+
+
+void CmdManager::handle_get_progress_report() {
+    cout << "Challenge Progress Report: \n" << endl;
+    cout << "Day of the Challenge: " << leinter->get_progress().day << endl;
+    cout << "Streak: " << leinter->get_progress().streak << endl;
+    cout << "Total Days Participated: " << leinter->get_progress().num_of_reviewed_days << endl;
+    cout << "Mastered Flashcards: " << leinter->get_progress().num_of_finished_life_cycle_flashcards << endl;
+    cout << endl;
+    cout << "Keep up the great work!    " << "You're making steady progress toward mastering your flashcards. " << endl;
+}
+
 
 void CmdManager::handle_streak() {
     cout << "Your current streak is: " << leinter->get_streak() << endl;

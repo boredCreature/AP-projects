@@ -14,7 +14,9 @@ private:
     void handle_next_day();
     void handle_review_flashcards(std::string flashcards_number);
     void handle_get_report(int begin_day,int end_day);
+    void handle_get_progress_report();
     void handle_streak();
+    void add_to_num_of_finished_life_cycle_flashcards();
     Leinter* leinter;
 };
 

@@ -4,10 +4,15 @@
 
 using namespace std;
 
-Leinter::Leinter() : day(1) , streak(0) {
+Leinter::Leinter() {
     for (int box_id = 0; box_id < NUM_OF_BOXES; box_id++) {
         box[box_id] = new Box();
     }
+
+    progress.day = 1;
+    progress.streak = 0;
+    progress.num_of_reviewed_days = 0;
+    progress.num_of_finished_life_cycle_flashcards = 0;
 }
 
 void Leinter::add_flashcards(Flashcard* flashcard) {
@@ -15,7 +20,7 @@ void Leinter::add_flashcards(Flashcard* flashcard) {
 }
 
 void Leinter::add_one_day() {
-    day += 1;
+    progress.day += 1;
     handle_unreviewed_flashcards_move();
 }
 
@@ -24,7 +29,7 @@ vector<Flashcard*> Leinter::find_flashcards_for_review(int flashcards_number) {
     int remaining_flashcards = flashcards_number;
     for (int i = remaining_flashcards; i > 0; i --) {
         for (int box_id = monthly; box_id >= daily; box_id --) {
-            if (day % TIME_LENGTH_OF_BOX[box_id] == 0) {
+            if (progress.day % TIME_LENGTH_OF_BOX[box_id] == 0) {
                 remaining_flashcards = box[box_id]->find_flashcards_for_review(remaining_flashcards, flashcards_for_review);
             }
         }
@@ -47,9 +52,10 @@ void Leinter::handle_flashcard_move(Flashcard* flashcard, bool answer_correction
     int box_id = find_box_id(flashcard);
 
     //END FLASHCARD LIFECYCLE   
-    if (answer_correction && box_id == Box_Id::monthly)
+    if (answer_correction && box_id == Box_Id::monthly) {
         box[box_id]->delete_flashcard(flashcard);
-    
+        progress.num_of_finished_life_cycle_flashcards += 1;
+    }
     else if (!answer_correction && box_id == Box_Id::daily)
         return;
 
@@ -79,7 +85,7 @@ void Leinter::add_flashcards_to_all_reviewed_flashcards_in_day(vector<Flashcard*
 void Leinter::find_unreviewed_flashcards_in_day() {
     vector<Flashcard*> unreviewed_flashcards_in_day;
     for (int box_id = 0; box_id < NUM_OF_BOXES; box_id ++) {
-        if (day % TIME_LENGTH_OF_BOX[box_id] == 0) {
+        if (progress.day % TIME_LENGTH_OF_BOX[box_id] == 0) {
             vector<Flashcard*> unreviewed_flashcards = box[box_id]->handle_unreviewed_flashcards(unreviewed_flashcards_in_day);
             unreviewed_flashcards_in_day.insert(unreviewed_flashcards_in_day.end(), unreviewed_flashcards.begin(), unreviewed_flashcards.end());
         }
@@ -93,22 +99,31 @@ void Leinter::handle_unreviewed_flashcards_move() {
 }
 
 void Leinter::add_to_num_of_correct_answers() {
-    performance_records[day].num_of_correct_answers += 1;
+    performance_records[progress.day].num_of_correct_answers += 1;
 }
 
 void Leinter::add_to_num_of_wrong_answers() {
-    performance_records[day].num_of_wrong_answers += 1;
+    performance_records[progress.day].num_of_wrong_answers += 1;
 }
 
 void Leinter::make_performance_record() {
     performance performance_record;
-    performance_records[day] = performance_record;
+    performance_records[progress.day] = performance_record;
 }
 
 
 void Leinter::update_streak() {
-    performance_records[day].get_total_answers() != 0 ? streak += 1 : streak = 0;
+    performance_records[progress.day].get_total_answers() != 0 ? progress.streak += 1 : progress.streak = 0;
 }
+
+void Leinter::add_to_num_of_finished_cycle_flashcards() {
+    progress.num_of_finished_life_cycle_flashcards += 1;
+}
+
+void Leinter::add_to_num_of_reviewed_days() {
+    progress.num_of_reviewed_days += 1;
+}
+
 
 string Leinter::to_string() {
     stringstream os;
@@ -116,6 +131,6 @@ string Leinter::to_string() {
     os << "Box every three days: " << box[every_three_days]->to_string() << endl;
     os << "Box weekly: " << box[weekly]->to_string() << endl;
     os << "Box monthly: " << box[monthly]->to_string() << endl;
-    os << "today is day: " << day << endl; 
+    os << "today is day: " << progress.day << endl; 
     return os.str();
 }
