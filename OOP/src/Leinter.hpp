@@ -2,7 +2,6 @@
 #define LEINTER_HPP
 #include "Box.hpp"
 
-
 const int TIME_LENGTH_OF_BOX[] = {1, 3, 7, 30};
 const int NUM_OF_BOXES = 4;
 
@@ -22,6 +21,12 @@ enum move_direction {
 struct performance{
     int num_of_correct_answers;
     int num_of_wrong_answers;
+    
+    performance(int correct = 0, int wrong = 0) : num_of_correct_answers(correct), 
+                                                  num_of_wrong_answers(wrong) {};
+    int get_total_answers () {
+        return num_of_correct_answers + num_of_wrong_answers;
+    }    
 };
 
 
@@ -37,6 +42,8 @@ public:
     void add_to_num_of_correct_answers();
     void add_to_num_of_wrong_answers();
     void make_performance_record();
+    void update_streak();
+    int get_streak() {return streak; }
     std::string to_string();
 private:
     void move_flashcard(Flashcard* flashcard, int move_direction);
@@ -48,7 +55,7 @@ private:
     Box* box[NUM_OF_BOXES];
     int day;
     std::map<int, performance> performance_records;
+    int streak;
 };
 
 #endif
-

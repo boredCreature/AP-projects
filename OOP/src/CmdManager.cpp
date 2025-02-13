@@ -32,6 +32,9 @@ void CmdManager::handle_inputs() {
             cin >> begin_day >> end_day;
             handle_get_report(stoi(begin_day), stoi(end_day));
         }
+        else if (command == "streak") {
+            handle_streak();
+        }
     }
 }
 
@@ -48,6 +51,7 @@ void CmdManager::handle_add_flashcards(string question_number) {
 }
 
 void CmdManager::handle_next_day() {
+    leinter->update_streak();
     leinter->add_one_day();
     leinter->make_performance_record();
 }
@@ -92,12 +96,17 @@ void CmdManager::handle_get_report(int begin_day, int end_day) {
     int total_answers = total_correct_answers + total_incorrect_answers;
 
     (begin_day == end_day) ? (cout << "Day: " << begin_day << endl) 
-                           : (cout << "Day: " << begin_day << " to " << endl);
+                           : (cout << "Day: " << begin_day << " to " << end_day << endl);
                            
     cout << "Correct Answers: " << total_correct_answers << endl;
     cout << "Incorrect Answers: " << total_incorrect_answers << endl;
     cout << "Total: " << total_answers << endl;
     
+}
+
+void CmdManager::handle_streak() {
+    cout << "Your current streak is: " << leinter->get_streak() << endl;
+    cout << "Keep going!" << endl;
 }
 
 string CmdManager::to_string() {

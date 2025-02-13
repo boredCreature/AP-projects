@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Leinter::Leinter() : day(1) {
+Leinter::Leinter() : day(1) , streak(0) {
     for (int box_id = 0; box_id < NUM_OF_BOXES; box_id++) {
         box[box_id] = new Box();
     }
@@ -101,10 +101,14 @@ void Leinter::add_to_num_of_wrong_answers() {
 }
 
 void Leinter::make_performance_record() {
-    performance_records[day].num_of_correct_answers = 0;
-    performance_records[day].num_of_wrong_answers = 0;
+    performance performance_record;
+    performance_records[day] = performance_record;
 }
 
+
+void Leinter::update_streak() {
+    performance_records[day].get_total_answers() != 0 ? streak += 1 : streak = 0;
+}
 
 string Leinter::to_string() {
     stringstream os;
