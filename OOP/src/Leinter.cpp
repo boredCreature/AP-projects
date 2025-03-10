@@ -11,8 +11,8 @@ Leinter::Leinter() {
 
     progress.day = 1;
     progress.streak = 0;
-    progress.num_of_reviewed_days = 0;
-    progress.num_of_finished_life_cycle_flashcards = 0;
+    progress.num_of_participated_days = 0;
+    progress.num_of_mastered_flashcards = 0;
 }
 
 void Leinter::add_flashcards(Flashcard* flashcard) {
@@ -54,7 +54,7 @@ void Leinter::handle_flashcard_move(Flashcard* flashcard, bool answer_correction
     //END FLASHCARD LIFECYCLE   
     if (answer_correction && box_id == Box_Id::monthly) {
         box[box_id]->delete_flashcard(flashcard);
-        progress.num_of_finished_life_cycle_flashcards += 1;
+        add_to_num_of_mastered_flashcards();
     }
     else if (!answer_correction && box_id == Box_Id::daily)
         return;
@@ -98,12 +98,9 @@ void Leinter::handle_unreviewed_flashcards_move() {
     }
 }
 
-void Leinter::add_to_num_of_correct_answers() {
-    performance_records[progress.day].num_of_correct_answers += 1;
-}
-
-void Leinter::add_to_num_of_wrong_answers() {
-    performance_records[progress.day].num_of_wrong_answers += 1;
+void Leinter::update_performance_records(bool correctness) {
+    correctness ? performance_records[progress.day].num_of_correct_answers += 1
+                : performance_records[progress.day].num_of_wrong_answers +=1;
 }
 
 void Leinter::make_performance_record() {
@@ -116,12 +113,12 @@ void Leinter::update_streak() {
     performance_records[progress.day].get_total_answers() != 0 ? progress.streak += 1 : progress.streak = 0;
 }
 
-void Leinter::add_to_num_of_finished_cycle_flashcards() {
-    progress.num_of_finished_life_cycle_flashcards += 1;
+void Leinter::add_to_num_of_mastered_flashcards() {
+    progress.num_of_mastered_flashcards += 1;
 }
 
-void Leinter::add_to_num_of_reviewed_days() {
-    progress.num_of_reviewed_days += 1;
+void Leinter::add_to_participated_days() {
+    progress.num_of_participated_days += 1;
 }
 
 

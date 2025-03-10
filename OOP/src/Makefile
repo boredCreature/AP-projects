@@ -14,3 +14,4 @@ Flashcard.o: Flashcard.cpp Flashcard.hpp
 	g++ -c $< -o $@
 clean:
 	rm *.o a.out
+

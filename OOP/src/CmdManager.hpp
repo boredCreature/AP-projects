@@ -7,16 +7,16 @@
 class CmdManager {
 public:
     CmdManager();
-    void handle_inputs();
+    void handle_cmd(std::string cmd, std::string line);
     std::string to_string();
 private:
-    void handle_add_flashcards(std::string question_number);
+    void handle_add_flashcards(int question_number);
     void handle_next_day();
-    void handle_review_flashcards(std::string flashcards_number);
+    void handle_review_flashcards(int flashcards_number);
+    void handle_single_flashcard_review(Flashcard* flashcard);
     void handle_get_report(int begin_day,int end_day);
     void handle_get_progress_report();
     void handle_streak();
-    void add_to_num_of_finished_life_cycle_flashcards();
     Leinter* leinter;
 };
 

@@ -7,7 +7,13 @@ App::App() {
 }
 
 void App::run() {
-    cmd_manager->handle_inputs();
+
+    string cmd, line;
+    while(getline(cin, line)) {
+        cmd = line.substr(0, line.find(" "));
+        line = line.substr(line.find(" ") + 1);
+        cmd_manager->handle_cmd(cmd, line);
+    }
 }
 
 string App::to_string() {

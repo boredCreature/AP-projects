@@ -9,49 +9,48 @@ CmdManager::CmdManager() {
     leinter = new Leinter();
 }
 
-void CmdManager::handle_inputs() {
-    string command;
-    while (cin >> command) { 
+void CmdManager::handle_cmd(string cmd, string line) {
 
-        if (command == "add_flashcard") {
-            string question_number;
-            cin >> question_number;
-            cin.ignore();
+        if (cmd == "add_flashcard") {
+            int question_number = stoi(line);
             handle_add_flashcards(question_number);
         }
-        else if (command == "next_day") {
+
+        else if (cmd == "next_day") {
             handle_next_day();
         }
-        else if (command == "review_today") {
-            string flashcards_number;
-            cin >> flashcards_number;
-            cin.ignore();
+        
+        else if (cmd == "review_today") {
+            int flashcards_number = stoi(line);
             handle_review_flashcards(flashcards_number);
         }
-        else if (command == "get_report") {
-            string begin_day, end_day;
-            cin >> begin_day >> end_day;
+
+        else if (cmd == "get_report") {
+            string begin_day = line.substr(0, line.find(" "));
+            string end_day = line.substr(line.find(" ") + 1);
             handle_get_report(stoi(begin_day), stoi(end_day));
         }
-        else if (command == "get_progress_report") {
+
+        else if (cmd == "get_progress_report") {
             handle_get_progress_report();
         }
-        else if (command == "streak") {
+
+        else if (cmd == "streak") {
             handle_streak();
         }
-    }
+
 }
 
-void CmdManager::handle_add_flashcards(string question_number) {
-    int flashcard_numbers = stoi(question_number);
-    for (int i = 0; i < flashcard_numbers; i++ ) {
+void CmdManager::handle_add_flashcards(int question_number) {
+
+    for (int i = 0; i < question_number; i++ ) {
         string question, answer;
         getline(cin, question);
         getline(cin, answer);
         Flashcard* new_flashcard = new Flashcard(question, answer);
         leinter->add_flashcards(new_flashcard);
     }
-    cout << "Flashcards added to the daily box" << endl;
+    cout << "flashcards added to the daily box" << endl;
 }
 
 void CmdManager::handle_next_day() {
@@ -64,34 +63,30 @@ void CmdManager::handle_next_day() {
     cout << "Start reviewing to keep your streak!" << endl;
 }
 
-void CmdManager::handle_review_flashcards(string flashcards_number) {
-    int flashcards_number_ = stoi(flashcards_number);
-    //just for testing
-    leinter->add_to_num_of_reviewed_days();
-    vector<Flashcard*> flashcards_for_review = leinter->find_flashcards_for_review(flashcards_number_);
+void CmdManager::handle_review_flashcards(int flashcard_number) {
+    leinter->add_to_participated_days();
+    vector<Flashcard*> flashcards_for_review = leinter->find_flashcards_for_review(flashcard_number);
     
     for (auto flashcard : flashcards_for_review) {
-        string user_answer;
-        cout << "Flashcard: " << flashcard->get_quesetion() << endl;
-        cout << "Your Answer: ";
-        getline(cin, user_answer);
-        bool correctness = flashcard->is_answer_correct(user_answer);
-        leinter->handle_flashcard_move(flashcard, correctness);
-
-        if (correctness) {
-            leinter->add_to_num_of_correct_answers();
-            cout << "Your answer was correct! Well done, keep it up!" << endl;
-        }
-
-        else {
-            leinter->add_to_num_of_wrong_answers();
-            cout << "Your answer was incorrect. Don't worry! The correct answer is: " << flashcard->get_answer() << endl;
-        }
+        handle_single_flashcard_review(flashcard);
     }
 
-    cout << "Keep practicing!" << endl;
-    cout << "You've completed today's review! Keep the momentum going and continue building "
+    cout << "You’ve completed today’s review! Keep the momentum going and continue building "
     "your knowledge, one flashcard at a time!" << endl;
+}
+
+void CmdManager::handle_single_flashcard_review(Flashcard* flashcard) {
+    string user_answer;
+        cout << "Flashcard: " << flashcard->get_quesetion() << endl;
+        cout << "Your answer: " << endl;
+        getline(cin, user_answer);
+        bool correctness = flashcard->is_answer_correct(user_answer);
+
+        leinter->update_performance_records(correctness);
+        leinter->handle_flashcard_move(flashcard, correctness);
+
+        correctness ? cout << "Your answer was correct! Well done, keep it up!" << endl
+                    : cout << "Your answer was incorrect. Don't worry! The correct answer is: " << flashcard->get_answer() << ". Keep practicing!" << endl;
 }
 
 void CmdManager::handle_get_report(int begin_day, int end_day) {
@@ -106,28 +101,21 @@ void CmdManager::handle_get_report(int begin_day, int end_day) {
     }
 
     int total_answers = total_correct_answers + total_incorrect_answers;
-
+    
     (begin_day == end_day) ? (cout << "Day: " << begin_day << endl) 
                            : (cout << "Day: " << begin_day << " to " << end_day << endl);
                            
     cout << "Correct Answers: " << total_correct_answers << endl;
     cout << "Incorrect Answers: " << total_incorrect_answers << endl;
     cout << "Total: " << total_answers << endl;
-    
 }
-
-
-void CmdManager::add_to_num_of_finished_life_cycle_flashcards() {
-    leinter->add_to_num_of_finished_cycle_flashcards();
-}
-
 
 void CmdManager::handle_get_progress_report() {
     cout << "Challenge Progress Report: \n" << endl;
     cout << "Day of the Challenge: " << leinter->get_progress().day << endl;
     cout << "Streak: " << leinter->get_progress().streak << endl;
-    cout << "Total Days Participated: " << leinter->get_progress().num_of_reviewed_days << endl;
-    cout << "Mastered Flashcards: " << leinter->get_progress().num_of_finished_life_cycle_flashcards << endl;
+    cout << "Total Days Participated: " << leinter->get_progress().num_of_participated_days << endl;
+    cout << "Mastered Flashcards: " << leinter->get_progress().num_of_mastered_flashcards << endl;
     cout << endl;
     cout << "Keep up the great work!    " << "You're making steady progress toward mastering your flashcards. " << endl;
 }
